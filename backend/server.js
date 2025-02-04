@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const authRoutes = require("./routes/auth");
+const task = require("./routes/taskRoutes");
 
 dotenv.config();
 const app = express();
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 app.use("/api/auth", authRoutes);
+app.use("/api/tasks", task);
 
 PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
