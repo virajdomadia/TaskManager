@@ -1,15 +1,19 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./page/Home";
 import Login from "./page/Login";
 import Register from "./page/Register";
+import Dashboard from "./page/Dashboard";
+import TaskForm from "./page/TaskForm";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <>
       <Router>
+        <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/tasks" element={<TaskForm />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Routes>

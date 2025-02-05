@@ -11,12 +11,12 @@ const TaskSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["pending", "in-progress", "completed"],
+    enum: ["Pending", "In Progress", "Completed"],
     default: "pending",
   },
   priority: {
     type: String,
-    enum: ["low", "medium", "high"],
+    enum: ["Low", "Medium", "High"],
     default: "low",
   },
 });
