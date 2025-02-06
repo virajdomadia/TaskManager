@@ -10,7 +10,8 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        // "http://localhost:5000/api/auth/login",
+        "https://taskmanager-backend-5my8.onrender.com/api/auth/login",
         {
           email,
           password,
@@ -63,6 +64,13 @@ const Login = () => {
           >
             Login
           </button>
+
+          <h3>
+            If not register please{" "}
+            <span>
+              <link to="/register">click here</link>
+            </span>
+          </h3>
 
           {error && <p className="mt-4 text-red-500 text-center">{error}</p>}
         </form>
