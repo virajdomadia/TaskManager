@@ -11,19 +11,32 @@ const TaskForm = ({ existingTask, onClose }) => {
       priority: "low",
     }
   );
+  const [error, setError] = useState(""); // 🔹 Store validation errors
 
   const handleChange = (e) => {
     setTask({ ...task, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (existingTask) {
-      editTask(existingTask._id, task);
-    } else {
-      addTask(task);
+    setError("");
+
+    // 🔹 Validate input
+    if (!task.title.trim() || !task.description.trim()) {
+      setError("Title and Description are required.");
+      return;
     }
-    onClose();
+
+    try {
+      if (existingTask) {
+        await editTask(existingTask._id, task);
+      } else {
+        await addTask(task);
+      }
+      onClose();
+    } catch (err) {
+      setError("Failed to save task. Please try again.");
+    }
   };
 
   return (
@@ -34,6 +47,10 @@ const TaskForm = ({ existingTask, onClose }) => {
       <h2 className="text-xl font-bold mb-4">
         {existingTask ? "Edit Task" : "New Task"}
       </h2>
+
+      {/* 🔹 Show Error Messages */}
+      {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+
       <input
         name="title"
         value={task.title}
@@ -56,7 +73,7 @@ const TaskForm = ({ existingTask, onClose }) => {
         className="w-full p-2 mb-2 border rounded"
       >
         <option value="pending">Pending</option>
-        <option value="in-progress">In Progress</option>
+        <option value="in progress">In Progress</option>
         <option value="completed">Completed</option>
       </select>
       <select
@@ -69,12 +86,23 @@ const TaskForm = ({ existingTask, onClose }) => {
         <option value="medium">Medium</option>
         <option value="high">High</option>
       </select>
-      <button
-        type="submit"
-        className="w-full bg-blue-500 text-white py-2 rounded"
-      >
-        {existingTask ? "Update" : "Add"}
-      </button>
+
+      {/* 🔹 Action Buttons */}
+      <div className="flex gap-2">
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white py-2 rounded"
+        >
+          {existingTask ? "Update" : "Add"}
+        </button>
+        <button
+          type="button"
+          onClick={onClose}
+          className="w-full bg-gray-400 text-white py-2 rounded"
+        >
+          Cancel
+        </button>
+      </div>
     </form>
   );
 };

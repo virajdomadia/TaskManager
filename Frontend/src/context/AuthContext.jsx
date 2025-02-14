@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -6,10 +6,10 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem("token")); // ✅ Store token in state
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
     if (token) {
       axios
         .get("http://localhost:5000/api/auth/me", {
@@ -17,10 +17,10 @@ export const AuthProvider = ({ children }) => {
         })
         .then((res) => setUser(res.data))
         .catch(() => {
-          localStorage.removeItem("token");
+          logout(); // ✅ Clear token if invalid
         });
     }
-  }, []);
+  }, [token]); // ✅ Run when `token` changes
 
   const login = async (email, password) => {
     try {
@@ -29,10 +29,11 @@ export const AuthProvider = ({ children }) => {
         password,
       });
       localStorage.setItem("token", res.data.token);
+      setToken(res.data.token); // ✅ Update token state
       setUser(res.data);
       navigate("/dashboard");
     } catch (error) {
-      console.error(error.response.data.msg);
+      console.error(error.response?.data?.msg || "Login failed");
     }
   };
 
@@ -44,24 +45,29 @@ export const AuthProvider = ({ children }) => {
         password,
       });
       localStorage.setItem("token", res.data.token);
+      setToken(res.data.token); // ✅ Update token state
       setUser(res.data);
       navigate("/dashboard");
     } catch (error) {
-      console.error(error.response.data.msg);
+      console.error(error.response?.data?.msg || "Registration failed");
     }
   };
 
   const logout = () => {
     localStorage.removeItem("token");
+    setToken(null); // ✅ Clear token state
     setUser(null);
     navigate("/login");
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+// ✅ Custom Hook for Cleaner Usage
+export const useAuth = () => useContext(AuthContext);
 
 export default AuthContext;

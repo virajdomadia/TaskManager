@@ -1,20 +1,15 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { getTasks, createTask, updateTask, deleteTask } from "../api/api";
-import AuthContext from "./AuthContext";
+import { useAuth } from "./AuthContext"; // ✅ Use `useAuth` instead of direct import
 
 const TaskContext = createContext();
 
 export const TaskProvider = ({ children }) => {
-  const { token } = AuthContext;
+  const { token } = useAuth(); // ✅ Correct way to access token
   const [tasks, setTasks] = useState([]);
 
-  useEffect(() => {
-    if (token) {
-      fetchTasks();
-    }
-  }, [token]);
-
   const fetchTasks = async () => {
+    if (!token) return; // ✅ Prevents making API calls if token is missing
     try {
       const data = await getTasks(token);
       setTasks(data);
@@ -23,19 +18,37 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    fetchTasks();
+  }, [token]); // ✅ Will refetch when token changes
+
   const addTask = async (taskData) => {
-    const newTask = await createTask(taskData, token);
-    setTasks([...tasks, newTask]);
+    try {
+      const newTask = await createTask(taskData, token);
+      setTasks((prevTasks) => [...prevTasks, newTask]);
+    } catch (error) {
+      console.error("Failed to add task", error);
+    }
   };
 
   const editTask = async (id, updatedData) => {
-    const updatedTask = await updateTask(id, updatedData, token);
-    setTasks(tasks.map((task) => (task._id === id ? updatedTask : task)));
+    try {
+      const updatedTask = await updateTask(id, updatedData, token);
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => (task._id === id ? updatedTask : task))
+      );
+    } catch (error) {
+      console.error("Failed to update task", error);
+    }
   };
 
   const removeTask = async (id) => {
-    await deleteTask(id, token);
-    setTasks(tasks.filter((task) => task._id !== id));
+    try {
+      await deleteTask(id, token);
+      setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
+    } catch (error) {
+      console.error("Failed to delete task", error);
+    }
   };
 
   return (

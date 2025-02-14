@@ -22,7 +22,7 @@ mongoose
 // });
 
 app.use("/api/auth", auth);
-app.use("/api/task", task);
+app.use("/api/tasks", task);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
