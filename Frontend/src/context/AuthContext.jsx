@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("token", res.data.token);
       setToken(res.data.token); // ✅ Update token state
       setUser(res.data);
-      navigate("/dashboard");
+      navigate("/");
     } catch (error) {
       console.error(error.response?.data?.msg || "Login failed");
     }
@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("token", res.data.token);
       setToken(res.data.token); // ✅ Update token state
       setUser(res.data);
-      navigate("/dashboard");
+      navigate("/");
     } catch (error) {
       console.error(error.response?.data?.msg || "Registration failed");
     }
