@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (token) {
       axios
-        .get("http://localhost:5000/api/auth/me", {
+        .get("https://taskmanagerbackend-yh6a.onrender.com/api/auth/me", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => setUser(res.data))
@@ -24,10 +24,13 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        "https://taskmanagerbackend-yh6a.onrender.com/api/auth/login",
+        {
+          email,
+          password,
+        }
+      );
       localStorage.setItem("token", res.data.token);
       setToken(res.data.token); // ✅ Update token state
       setUser(res.data);
@@ -39,11 +42,14 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, password) => {
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
-        name,
-        email,
-        password,
-      });
+      const res = await axios.post(
+        "https://taskmanagerbackend-yh6a.onrender.com/api/auth/register",
+        {
+          name,
+          email,
+          password,
+        }
+      );
       localStorage.setItem("token", res.data.token);
       setToken(res.data.token); // ✅ Update token state
       setUser(res.data);

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api/tasks"; // ✅ Ensure consistency with backend
+const API = "https://taskmanagerbackend-yh6a.onrender.com/api/tasks"; // ✅ Ensure consistency with backend
 
 // 🔹 Helper function for headers
 const getHeaders = (token) => ({
