@@ -4,6 +4,7 @@ import {
   TrashIcon,
   FlagIcon,
 } from "@heroicons/react/24/solid";
+import Moment from "moment";
 
 const TaskCard = ({ task, onEdit }) => {
   const { removeTask } = useTasks();
@@ -57,6 +58,8 @@ const TaskCard = ({ task, onEdit }) => {
     }
   };
 
+  const formattedDate = Moment(task.dueDate).format("YYYY-MM-DD");
+
   return (
     <div
       className="bg-white/30 backdrop-blur-lg p-6 rounded-xl shadow-lg border border-gray-200 
@@ -67,6 +70,9 @@ const TaskCard = ({ task, onEdit }) => {
         <div>
           <h3 className="text-lg font-semibold text-gray-900">{task.title}</h3>
           <p className="text-sm text-gray-600">{task.description}</p>
+        </div>
+        <div>
+          <p className="text-sm text-black">{formattedDate}</p>
         </div>
         <div className="flex space-x-3">
           {/* Edit Button */}
